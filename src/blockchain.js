@@ -63,6 +63,14 @@ class Blockchain {
   _addBlock(block) {
     let self = this;
     return new Promise(async (resolve, reject) => {
+      console.log(1);
+      const errorLog = await self.validateChain();
+      console.log(2);
+      if (errorLog.length > 0) {
+        console.log(4);
+        return reject(`invalid chain before adding block: ${errorLog}`);
+      }
+      console.log(3);
       if (self.height > -1) {
         block.previousBlockHash = self.chain[self.height].hash;
       }
@@ -197,6 +205,9 @@ class Blockchain {
     let self = this;
     return new Promise(async (resolve, reject) => {
       const errorLog = [];
+      if (self.chain.length === 0) {
+        return resolve(errorLog);
+      }
       for (const i = 0; i < self.chain.length; i++) {
         if (!self.chain[i].validate()) {
           errorLog.push(`validation error in block ${self.chain[i].hash}`);

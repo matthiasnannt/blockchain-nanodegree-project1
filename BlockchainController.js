@@ -123,6 +123,18 @@ class BlockchainController {
       }
     });
   }
+
+  // Endpoint that validates the chain (GET Endpoint)
+  requestOwnership() {
+    this.app.get("/validateChain", async (req, res) => {
+      const errorLog = await this.blockchain.validateChain();
+      if (errorLog) {
+        return res.status(200).json(errorLog);
+      } else {
+        return res.status(500).send("An error happened!");
+      }
+    });
+  }
 }
 
 module.exports = (app, blockchainObj) => {
